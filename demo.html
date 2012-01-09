@@ -1,0 +1,95 @@
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+
+<style>
+  .slider {
+    width: 400px;
+    height: 300px;
+    overflow: hidden;
+  }
+    .slider > ul {
+      /* styled by JS to match the added width and height of all <li>’s */
+      list-style: none;
+      margin: 0;
+      padding: 0;
+      -webkit-transition: 0.5s margin-left;
+      -moz-transition: margin-left;
+      -ms-transition: margin-left;
+      -o-transition: margin-left;
+    }
+      .slider > ul > li {
+        float: left;
+        width: 400px;
+        height: 300px;
+      }
+</style>
+
+<script>
+  var Slider = function() { this.initialize.apply(this, arguments) }
+  Slider.prototype = {
+
+    initialize: function(slider) {
+      this.$ul = $(slider).children('ul:first-child')
+
+      // store <li> width and count
+      var $ulChildren = this.$ul.children()
+      this.liWidth = $ulChildren.width()
+      this.length = $ulChildren.length
+
+      // make <ul> as large as all <li>’s
+      var ulWidth = this.liWidth * this.length
+      this.$ul.css('width', ulWidth)
+
+      this.currentIndex = 0
+    },
+
+    goTo: function(index) {
+      // filter invalid indices
+      if (index == this.currentIndex || index < 0 || index > this.length - 1)
+        return
+
+      // move <ul> left by the <li> width * the new index
+      this.$ul.css('margin-left', -(this.liWidth * index))
+
+      this.currentIndex = index
+    },
+
+    goToPrev: function() {
+      this.goTo(this.currentIndex - 1)
+    },
+
+    goToNext: function() {
+      this.goTo(this.currentIndex + 1)
+    }
+  }
+</script>
+
+<div class="slider">
+  <ul>
+    <li><img src="img/1.png"></li>
+    <li><img src="img/2.png"></li>
+    <li><img src="img/3.png"></li>
+    <li><img src="img/4.png"></li>
+  </ul>
+</div>
+
+<script>
+  var sliders = []
+  $('.slider').each(function() {
+    sliders.push(new Slider(this))
+  })
+</script>
+
+<div>
+  <ul>
+    <li><a href="javascript:sliders[0].goToPrev()">.goToPrev()</a></li>
+    <li><a href="javascript:sliders[0].goToNext()">.goToNext()</a></li>
+  </ul>
+  <ul>
+    <li><a href="javascript:sliders[0].goTo(-1)">.goTo(-1)</a></li>
+    <li><a href="javascript:sliders[0].goTo(0)">.goTo(0)</a></li>
+    <li><a href="javascript:sliders[0].goTo(1)">.goTo(1)</a></li>
+    <li><a href="javascript:sliders[0].goTo(2)">.goTo(2)</a></li>
+    <li><a href="javascript:sliders[0].goTo(3)">.goTo(3)</a></li>
+    <li><a href="javascript:sliders[0].goTo(42)">.goTo(42)</a></li>
+  </ul>
+</div>

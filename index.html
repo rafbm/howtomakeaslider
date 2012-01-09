@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<meta charset="utf-8">
+<title>How To Make A Slider</title>
+<link rel="stylesheet" href="http://twitter.github.com/bootstrap/1.4.0/bootstrap.min.css">
+<link rel="stylesheet" href="http://twitter.github.com/bootstrap/assets/js/google-code-prettify/prettify.css">
+<script src="http://twitter.github.com/bootstrap/assets/js/google-code-prettify/prettify.js"></script>
+<script>addEventListener('load',prettyPrint,false)</script>
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+
+<style>
+  .pun { color: #195f91 }
+  .com { color: rgba(0,0,0,0.75); background: #fee9cc }
+  .container { width: 600px }
+  #main { padding: 30px 0 }
+  h1,h2,h3 { margin: 1.4em 0 0.2em }
+  h1 {
+    text-align: center;
+    font-size: 48px;
+    margin: 1.4em 0;
+  }
+  h2 ~ h2 {
+    border-top: 1px solid #eee;
+    padding-top: 1em;
+  }
+  .intro {
+    margin: 4em 0;
+  }
+    .intro p {
+      font-size: 24px;
+      line-height: 1.3;
+      margin: 1em 0;
+      color: #888;
+    }
+  dfn { font-weight: bold }
+  footer {
+    background-color: #eee;
+    min-width: 940px;
+    padding: 30px 0;
+    text-shadow: 0 1px 0 #fff;
+    border-top: 1px solid #e5e5e5;
+  }
+</style>
+
+<style>
+  .slider {
+    width: 400px;
+    height: 300px;
+    overflow: hidden;
+  }
+    .slider > ul {
+      /* styled by JS to match the added width and height of all <li>’s */
+      list-style: none;
+      margin: 0;
+      padding: 0;
+      -webkit-transition: 0.5s margin-left;
+      -moz-transition: margin-left;
+      -ms-transition: margin-left;
+      -o-transition: margin-left;
+    }
+      .slider > ul > li {
+        float: left;
+        width: 400px;
+        height: 300px;
+      }
+</style>
+<script>
+  var Slider = function() { this.initialize.apply(this, arguments) }
+  Slider.prototype = {
+
+    initialize: function(slider) {
+      this.$ul = $(slider).children('ul:first-child')
+
+      // store <li> width and count
+      var $ulChildren = this.$ul.children()
+      this.liWidth = $ulChildren.width()
+      this.length = $ulChildren.length
+
+      // make <ul> as large as all <li>’s
+      var ulWidth = this.liWidth * this.length
+      this.$ul.css('width', ulWidth)
+
+      this.currentIndex = 0
+    },
+
+    goTo: function(index) {
+      // filter invalid indices
+      if (index == this.currentIndex || index < 0 || index > this.length - 1)
+        return
+
+      // move <ul> left by the <li> width * the new index
+      this.$ul.css('margin-left', -(this.liWidth * index))
+
+      this.currentIndex = index
+    },
+
+    goToPrev: function() {
+      this.goTo(this.currentIndex - 1)
+    },
+
+    goToNext: function() {
+      this.goTo(this.currentIndex + 1)
+    }
+  }
+</script>
+
+
+<div id="main" class="container">
+<h1>How To Make A Slider</h1>
+
+<div class="intro">
+  <p>Looking for a jQuery slider plugin? Think again. Anyone with decent HTML, CSS and JavaScript knowledge can build a slider with just a small amount of code.</p>
+  <p>Below is what you need to obtain the basic functionality of a slider, that is, a series of horizontally sliding images (or anything else) controlled by JavaScript.</p>
+</div>
+
+
+<h2>HTML</h2>
+
+<pre class="prettyprint linenums">
+&lt;div class=&quot;slider&quot;&gt;
+  &lt;ul&gt;
+    &lt;li&gt;&lt;img src=&quot;img/1.png&quot;&gt;&lt;/li&gt;
+    &lt;li&gt;&lt;img src=&quot;img/2.png&quot;&gt;&lt;/li&gt;
+    &lt;li&gt;&lt;img src=&quot;img/3.png&quot;&gt;&lt;/li&gt;
+    &lt;li&gt;&lt;img src=&quot;img/4.png&quot;&gt;&lt;/li&gt;
+    &lt;li&gt;&lt;img src=&quot;img/5.png&quot;&gt;&lt;/li&gt;
+  &lt;/ul&gt;
+&lt;/div&gt;
+</pre>
+
+<h3>We need three things to build a slider in its simplest form…</h3>
+
+<ul>
+  <li>an <dfn>overflow container</dfn>: mask of predetermined width and height (<code>&lt;div class=&quot;slider&quot;&gt;</code>)</li>
+  <li>a <dfn>sliding list</dfn>: child of the container that slides horizontally (<code>&lt;ul&gt;</code>)</li>
+  <li><dfn>slides</dfn>: children of the list that match the container’s dimensions (<code>&lt;li&gt;</code>’s)</li>
+</ul>
+
+
+
+<h2>CSS</h2>
+
+<pre class="prettyprint linenums">.slider {
+  width: 400px;
+  height: 300px;
+  overflow: hidden;
+}
+  .slider &gt; ul {
+    /* styled by JS to match the added width and height of all &lt;li&gt;&rsquo;s */
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    -webkit-transition: margin-left;
+    -moz-transition: margin-left;
+    -ms-transition: margin-left;
+    -o-transition: margin-left;
+  }
+    .slider > ul > li {
+      float: left;
+      width: 400px;
+      height: 300px;
+    }
+</pre>
+
+<h3>Notice the following properties…</h3>
+
+<ul>
+  <li><code>overflow: hidden</code> on the <code>&lt;div class=&quot;slider&quot;&gt;</code></li>
+  <li>transition on the <code>&lt;ul&gt;</code> (we’ll use a negative <code>margin-left</code> for the horizontal sliding)</li>
+  <li><code>float: left</code> to arrange <code>&lt;li&gt;</code>’s horizontally</li>
+</ul>
+
+
+<h2>JavaScript</h2>
+
+<pre class="prettyprint linenums">
+var Slider = function() { this.initialize.apply(this, arguments) }
+Slider.prototype = {
+
+  initialize: function(slider) {
+    this.$ul = $(slider).children(&#x27;ul:first-child&#x27;)
+
+    // store &lt;li&gt; width and count
+    var $ulChildren = this.$ul.children()
+    this.liWidth = $ulChildren.width()
+    this.length = $ulChildren.length
+
+    // make &lt;ul&gt; as large as all &lt;li&gt;&rsquo;s
+    var ulWidth = this.liWidth * this.length
+    this.$ul.css(&#x27;width&#x27;, ulWidth)
+
+    this.currentIndex = 0
+  },
+
+  goTo: function(index) {
+    // filter invalid indices
+    if (index == this.currentIndex || index &lt; 0 || index &gt; this.length - 1)
+      return
+
+    // move &lt;ul&gt; left by the &lt;li&gt; width * the new index
+    this.$ul.css('margin-left', -(this.liWidth * index))
+
+    this.currentIndex = index
+  },
+
+  goToPrev: function() {
+    this.goTo(this.currentIndex - 1)
+  },
+
+  goToNext: function() {
+    this.goTo(this.currentIndex + 1)
+  }
+}
+</pre>
+
+<h3>A simple prototype-based class which…</h3>
+
+<ul>
+  <li>has a constructor that receives a <code>&lt;div class=&quot;slider&quot;&gt;</code></li>
+  <li>dynamically makes the <code>&lt;ul&gt;</code> as large as all <code>&lt;li&gt;</code>&rsquo;s</li>
+  <li>has <code>.goToPrev()</code>, <code>.goToNext()</code> and <code>.goTo(index)</code> methods, ready to be binded on previous/next links or the usual sequential bullets</li>
+</ul>
+
+
+<h2>On your page</h2>
+
+<pre class="prettyprint linenums">
+&lt;script&gt;
+  var sliders = []
+  $(&#x27;.slider&#x27;).each(function() {
+    sliders.push(new Slider(this))
+  })
+&lt;/script&gt;
+</pre>
+
+
+<h2>Result</h2>
+
+<div class="slider">
+  <ul>
+    <li><img src="img/1.png"></li>
+    <li><img src="img/2.png"></li>
+    <li><img src="img/3.png"></li>
+    <li><img src="img/4.png"></li>
+  </ul>
+</div>
+
+<script>
+  var sliders = []
+  $('.slider').each(function() {
+    sliders.push(new Slider(this))
+  })
+</script>
+
+<div style="width: 400px; margin: 1em 0; font-family: Monaco, 'Andale Mono', 'Courier New', monospace">
+  <ul>
+    <li><a href="javascript:sliders[0].goToPrev()">.goToPrev()</a></li>
+    <li><a href="javascript:sliders[0].goToNext()">.goToNext()</a></li>
+  </ul>
+  <ul>
+    <li><a href="javascript:sliders[0].goTo(-1)">.goTo(-1)</a></li>
+    <li><a href="javascript:sliders[0].goTo(0)">.goTo(0)</a></li>
+    <li><a href="javascript:sliders[0].goTo(1)">.goTo(1)</a></li>
+    <li><a href="javascript:sliders[0].goTo(2)">.goTo(2)</a></li>
+    <li><a href="javascript:sliders[0].goTo(3)">.goTo(3)</a></li>
+    <li><a href="javascript:sliders[0].goTo(42)">.goTo(42)</a></li>
+  </ul>
+</div>
+
+<p>Here’s <a href="demo.html">an HTML page</a> with just the bare stuff you need.</p>
+
+</div>
+
+<footer class="footer">
+  <div class="container">
+    <p>Made by <a href="https://twitter.com/rafBM">@rafBM</a>. Assets hot-linked from Twitter’s <a href="http://twitter.github.com/bootstrap">Bootstrap</a>.</p>
+    <p>This page is released under the <a href="http://en.wikipedia.org/wiki/WTFPL">WTFPL</a>.</p>
+    <p>You can <a href="&#109;&#97;&#105;&#108;&#116;&#111;&#58;&#114;&#97;&#102;&#98;&#109;&#97;&#115;&#115;&#111;&#110;&#64;&#103;&#109;&#97;&#105;&#108;&#46;&#99;&#111;&#109;">email me</a> for questions or comments.</p>
+  </div>
+</footer>
