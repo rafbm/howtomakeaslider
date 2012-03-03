@@ -49,13 +49,14 @@
   }
     .slider > ul {
       /* styled by JS to match the added width and height of all <li>’s */
+      position: relative;
+      -webkit-transition: 0.5s left;
+      -moz-transition: 0.5s left;
+      -ms-transition: 0.5s left;
+      -o-transition: 0.5s left;
+
       list-style: none;
-      margin: 0;
-      padding: 0;
-      -webkit-transition: 0.5s margin-left;
-      -moz-transition: 0.5s margin-left;
-      -ms-transition: 0.5s margin-left;
-      -o-transition: 0.5s margin-left;
+      margin: 0; padding: 0;
     }
       .slider > ul > li {
         float: left;
@@ -69,26 +70,21 @@
 
     initialize: function(slider) {
       this.$ul = $(slider).children('ul:first-child')
-
-      // store <li> width and count
-      var $ulChildren = this.$ul.children()
-      this.liWidth = $ulChildren.width()
-      this.length = $ulChildren.length
+      this.$li = this.$ul.children()
 
       // make <ul> as large as all <li>’s
-      var ulWidth = this.liWidth * this.length
-      this.$ul.css('width', ulWidth)
+      this.$ul.css('width', this.$li.width() * this.$li.length)
 
       this.currentIndex = 0
     },
 
     goTo: function(index) {
       // filter invalid indices
-      if (index == this.currentIndex || index < 0 || index > this.length - 1)
+      if (index < 0 || index > this.$li.length - 1)
         return
 
-      // move <ul> left by the <li> width * the new index
-      this.$ul.css('margin-left', -(this.liWidth * index))
+      // move <ul> left
+      this.$ul.css('left', '-' + (100 * index) + '%')
 
       this.currentIndex = index
     },
@@ -145,13 +141,14 @@
 }
   .slider &gt; ul {
     /* styled by JS to match the added width and height of all &lt;li&gt;&rsquo;s */
+    position: relative;
+    -webkit-transition: 0.5s left;
+    -moz-transition: 0.5s left;
+    -ms-transition: 0.5s left;
+    -o-transition: 0.5s left;
+
     list-style: none;
-    margin: 0;
-    padding: 0;
-    -webkit-transition: 0.5s margin-left;
-    -moz-transition: 0.5s margin-left;
-    -ms-transition: 0.5s margin-left;
-    -o-transition: 0.5s margin-left;
+    margin: 0; padding: 0;
   }
     .slider > ul > li {
       float: left;
@@ -164,7 +161,7 @@
 
 <ul>
   <li><code>overflow: hidden</code> on the <code>&lt;div class=&quot;slider&quot;&gt;</code></li>
-  <li>transition on the <code>&lt;ul&gt;</code> (we’ll use a negative <code>margin-left</code> for the horizontal sliding)</li>
+  <li><code>position: relative</code> and transitions on the <code>&lt;ul&gt;</code> (we’ll use <code>left</code> for the horizontal sliding)</li>
   <li><code>float: left</code> to arrange <code>&lt;li&gt;</code>’s horizontally</li>
 </ul>
 
@@ -172,43 +169,38 @@
 <h2>JavaScript</h2>
 
 <pre class="prettyprint linenums">
-var Slider = function() { this.initialize.apply(this, arguments) }
-Slider.prototype = {
+  var Slider = function() { this.initialize.apply(this, arguments) }
+  Slider.prototype = {
 
-  initialize: function(slider) {
-    this.$ul = $(slider).children(&#x27;ul:first-child&#x27;)
+    initialize: function(slider) {
+      this.$ul = $(slider).children('ul:first-child')
+      this.$li = this.$ul.children()
 
-    // store &lt;li&gt; width and count
-    var $ulChildren = this.$ul.children()
-    this.liWidth = $ulChildren.width()
-    this.length = $ulChildren.length
+      // make &lt;ul&gt; as large as all &lt;li&gt;’s
+      this.$ul.css('width', this.$li.width() * this.$li.length)
 
-    // make &lt;ul&gt; as large as all &lt;li&gt;&rsquo;s
-    var ulWidth = this.liWidth * this.length
-    this.$ul.css(&#x27;width&#x27;, ulWidth)
+      this.currentIndex = 0
+    },
 
-    this.currentIndex = 0
-  },
+    goTo: function(index) {
+      // filter invalid indices
+      if (index &lt; 0 || index > this.$li.length - 1)
+        return
 
-  goTo: function(index) {
-    // filter invalid indices
-    if (index == this.currentIndex || index &lt; 0 || index &gt; this.length - 1)
-      return
+      // move &lt;ul&gt; left
+      this.$ul.css('left', '-' + (100 * index) + '%')
 
-    // move &lt;ul&gt; left by the &lt;li&gt; width * the new index
-    this.$ul.css('margin-left', -(this.liWidth * index))
+      this.currentIndex = index
+    },
 
-    this.currentIndex = index
-  },
+    goToPrev: function() {
+      this.goTo(this.currentIndex - 1)
+    },
 
-  goToPrev: function() {
-    this.goTo(this.currentIndex - 1)
-  },
-
-  goToNext: function() {
-    this.goTo(this.currentIndex + 1)
+    goToNext: function() {
+      this.goTo(this.currentIndex + 1)
+    }
   }
-}
 </pre>
 
 <h3>A simple prototype-based class which…</h3>
