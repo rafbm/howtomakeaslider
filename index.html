@@ -69,22 +69,22 @@
   Slider.prototype = {
 
     initialize: function(slider) {
-      this.$ul = $(slider).children('ul:first-child')
-      this.$li = this.$ul.children()
+      this.ul = slider.children[0]
+      this.li = this.ul.children
 
       // make <ul> as large as all <li>’s
-      this.$ul.css('width', this.$li.width() * this.$li.length)
+      this.ul.style.width = (this.li[0].clientWidth * this.li.length) + 'px'
 
       this.currentIndex = 0
     },
 
     goTo: function(index) {
       // filter invalid indices
-      if (index < 0 || index > this.$li.length - 1)
+      if (index < 0 || index > this.li.length - 1)
         return
 
       // move <ul> left
-      this.$ul.css('left', '-' + (100 * index) + '%')
+      this.ul.style.left = '-' + (100 * index) + '%'
 
       this.currentIndex = index
     },
@@ -173,22 +173,22 @@
   Slider.prototype = {
 
     initialize: function(slider) {
-      this.$ul = $(slider).children('ul:first-child')
-      this.$li = this.$ul.children()
+      this.ul = slider.children[0]
+      this.li = this.ul.children
 
       // make &lt;ul&gt; as large as all &lt;li&gt;’s
-      this.$ul.css('width', this.$li.width() * this.$li.length)
+      this.ul.style.width = (this.li[0].clientWidth * this.li.length) + 'px'
 
       this.currentIndex = 0
     },
 
     goTo: function(index) {
       // filter invalid indices
-      if (index &lt; 0 || index > this.$li.length - 1)
+      if (index < 0 || index > this.li.length - 1)
         return
 
       // move &lt;ul&gt; left
-      this.$ul.css('left', '-' + (100 * index) + '%')
+      this.ul.style.left = '-' + (100 * index) + '%'
 
       this.currentIndex = index
     },
