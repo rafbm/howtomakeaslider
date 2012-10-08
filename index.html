@@ -4,7 +4,7 @@
 <link rel="stylesheet" href="http://twitter.github.com/bootstrap/1.4.0/bootstrap.min.css">
 <link rel="stylesheet" href="http://twitter.github.com/bootstrap/assets/js/google-code-prettify/prettify.css">
 <script src="http://twitter.github.com/bootstrap/assets/js/google-code-prettify/prettify.js"></script>
-<script>addEventListener('load',prettyPrint,false)</script>
+<script>window.onload = prettyPrint</script>
 <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
 
 <style>
@@ -43,9 +43,9 @@
 
 <style>
   .slider {
-    width: 400px;
-    height: 300px;
+    width: 400px; height: 300px;
     overflow: hidden;
+    position: relative; /* for overflow: hidden to work in IE7 */
   }
     .slider > ul {
       /* styled by JS to match the added width and height of all <li>’s */
@@ -60,8 +60,7 @@
     }
       .slider > ul > li {
         float: left;
-        width: 400px;
-        height: 300px;
+        width: 400px; height: 300px;
       }
 </style>
 <script>
@@ -135,8 +134,7 @@
 <h2>CSS</h2>
 
 <pre class="prettyprint linenums">.slider {
-  width: 400px;
-  height: 300px;
+  width: 400px; height: 300px;
   overflow: hidden;
 }
   .slider &gt; ul {
@@ -152,8 +150,7 @@
   }
     .slider > ul > li {
       float: left;
-      width: 400px;
-      height: 300px;
+      width: 400px; height: 300px;
     }
 </pre>
 
